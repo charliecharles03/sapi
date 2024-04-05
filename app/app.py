@@ -1,7 +1,11 @@
 from flask import Flask
 from flask_cors import CORS
-from .resources.auth.userAPI import UserAPI , LoginAPI
+from .resources.auth.userAPI import UserAPI , LoginAPI, Register
+
+from .resources.auth.songsAPI import Get_songs_route,  Add_song_route
 from flask_jwt_extended import JWTManager
+
+from .models.model import create_tables
 
 import os
 
@@ -34,6 +38,16 @@ def index():
 app.add_url_rule('/api/auth/userprofile/', view_func=UserAPI.as_view('user_profile'),methods=['GET'])
 
 app.add_url_rule('/api/auth/login', view_func=LoginAPI.as_view('login_api'), methods=['POST'])
+
+app.add_url_rule('/api/auth/recents', view_func=Get_songs_route, methods=['GET'])
+
+app.add_url_rule('/api/auth/addsong', view_func=Add_song_route, methods=['POST'])
+
+
+#songs end points
+
+app.add_url_rule('/api/auth/songs', view_func=Register, methods=['POST'])
+
 
 if __name__ == '__main__':
     app.run(debug=True)
