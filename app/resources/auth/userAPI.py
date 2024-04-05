@@ -1,6 +1,7 @@
 from flask import request, jsonify
 from flask.views import MethodView
 from flask_restful import Resource
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 
 # Sample user data (for a music app)
 
@@ -43,3 +44,17 @@ class UserAPI(MethodView):
         else:
             return jsonify({"error": "User not found"}), 404
 
+
+
+class LoginAPI(Resource):
+    def post(self):
+        username = request.json.get('username', None)
+        password = request.json.get('password', None)
+
+        # Add your authentication logic here (e.g., validate username and password)
+        if username != 'example' or password != 'example':
+            return jsonify({"msg": "Invalid username or password"}), 401
+
+        # Identity can be any data that is json serializable
+        access_token = create_access_token(identity=username)
+        return jsonify(access_token=access_token), 200
