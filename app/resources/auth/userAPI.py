@@ -39,6 +39,7 @@ users = {
 
 
 class UserAPI(MethodView):
+    @jwt_required()
     def get(self):
         user_id = request.args.get('user_id')
         user = users.get(int(user_id))
