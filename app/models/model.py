@@ -60,6 +60,32 @@ def create_playlists_table():
     conn.commit()
     conn.close()
 
+def create_albums_table():
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS albums (
+                     id INTEGER PRIMARY KEY,
+                     user_id INTEGER,
+                     name TEXT,
+                     FOREIGN KEY(user_id) REFERENCES users(id)
+             )''')
+    conn.commit()
+    conn.close()
+
+def create_album_table():
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS album(
+                    id INTEGER PRIMARY KEY,
+                    album_id INTEGER,
+                    user_id INTEGER,
+                    song_id INTEGER,
+                    FOREIGN KEY(album_id) REFERENCES album_id(id)
+                    FOREIGN KEY(user_id) REFERENCES users(id),
+                    FOREIGN KEY(song_id) REFERENCES songs(id)
+                )''')
+    conn.commit()
+    conn.close()
 #user part
 
 # Function to hash passwords
@@ -200,6 +226,54 @@ def delete_from_playlist(user_id, song_id, playlist_name):
         cursor.execute('''DELETE FROM playlist 
                         WHERE playlist_id = ? AND user_id = ? AND song_id = ?''', 
                        (playlist_id, user_id, song_id))
+
+        conn.commit()
+        conn.close()
+        return True
+    except sqlite3.Error as e:
+        conn.rollback()
+        conn.close()
+        raise e
+
+#album part
+
+def get_album(user_id):
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    print(user_id)
+    try:
+        cursor.execute('''SELECT albums.name, songs.* FROM album 
+                        INNER JOIN songs ON album.song_id = songs.id
+                        INNER JOIN albums ON album.album_id = albums.id
+                        WHERE album.user_id = ?''', (user_id,))
+        album = cursor.fetchall()
+        conn.close()
+        return album 
+    except sqlite3.Error as e:
+        conn.close()
+        raise e
+
+def add_to_album(user_id, song_id, album_name):
+    create_album_table()
+    create_albums_table()
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    try:
+        # Check if playlist exists for the user, if not, create it
+        cursor.execute('''SELECT id FROM albums
+                        WHERE user_id = ? AND name = ?''', (user_id, album_name))
+        album = cursor.fetchone()
+
+        if not album:
+            cursor.execute('''INSERT INTO albums (user_id, name)
+                            VALUES (?, ?)''', (user_id, album_name))
+            album_id = cursor.lastrowid
+        else:
+            album_id = album[0]
+
+        # Add song to playlist
+        cursor.execute('''INSERT INTO album (album_id, user_id, song_id)
+                        VALUES (?, ?, ?)''', (album_id, user_id, song_id))
 
         conn.commit()
         conn.close()

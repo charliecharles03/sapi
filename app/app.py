@@ -3,6 +3,7 @@ from flask_cors import CORS
 from .resources.auth.userAPI import UserAPI , LoginAPI, Register
 from .resources.auth.songsAPI import Get_songs_route,  Add_song_route
 from .resources.auth.playlistAPI import add_to_user_playlist,fetch_playlist, delete_from_user_playlist
+from .resources.auth.albumAPI import add_to_user_album, fetch_album
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
 
@@ -52,6 +53,12 @@ app.add_url_rule('/api/auth/songs', view_func=Register, methods=['POST'])
 app.add_url_rule('/api/auth/addplaylist',view_func=add_to_user_playlist,methods=["POST"])
 app.add_url_rule('/api/auth/getplaylist',view_func=fetch_playlist,methods=["GET"])
 app.add_url_rule('/api/auth/dplaylist',view_func=delete_from_user_playlist,methods=["DELETE"])
+
+#album endpoints
+
+app.add_url_rule('/api/auth/addalbum',view_func=add_to_user_album,methods=["POST"])
+app.add_url_rule('/api/auth/getalbum',view_func=fetch_album,methods=["GET"])
+
 
 if __name__ == '__main__':
     app.run(debug=True)
