@@ -1,5 +1,5 @@
 from flask import Flask,jsonify,request
-from ...models.model import get_playlist, add_to_playlist, delete_from_playlist
+from ...models.model import get_playlist, add_to_playlist, delete_from_playlist,  get_playist_of_user
 
 def add_to_user_playlist():
     data = request.json
@@ -80,3 +80,13 @@ def delete_from_user_playlist():
         return jsonify({"error": str(e)}), 500
 
 
+
+def  get_Playlist_names_of_user():
+    user_id = request.args.get('user_id')
+    if user_id is None:
+        return jsonify({"error": "user_id is required"}), 400
+    try:
+        playlist_names =  get_playist_of_user(user_id)
+        return jsonify(playlist_names),200
+    except Exception as e:
+        return jsonify({"error":str(e)}),500

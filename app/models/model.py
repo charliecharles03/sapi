@@ -188,8 +188,6 @@ def get_playlist(user_id):
         raise e
 
 def add_to_playlist(user_id, song_id, playlist_name):
-    create_playlist_table()
-    create_playlists_table()
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
     try:
@@ -214,6 +212,20 @@ def add_to_playlist(user_id, song_id, playlist_name):
         return True
     except sqlite3.Error as e:
         conn.rollback()
+        conn.close()
+        raise e
+
+def get_playist_of_user(user_id):
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    print(user_id)
+    try:
+        cursor.execute('''SELECT * FROM playlists WHERE user_id = ?''', (user_id,))
+        playlist = cursor.fetchall()
+        print(playlist)
+        conn.close()
+        return playlist
+    except sqlite3.Error as e:
         conn.close()
         raise e
 

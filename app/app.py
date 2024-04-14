@@ -2,7 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from .resources.auth.userAPI import UserAPI , LoginAPI, Register
 from .resources.auth.songsAPI import Get_songs_route,  Add_song_route, update_song_route, delete_song_route
-from .resources.auth.playlistAPI import add_to_user_playlist,fetch_playlist, delete_from_user_playlist
+from .resources.auth.playlistAPI import add_to_user_playlist,fetch_playlist, delete_from_user_playlist,get_Playlist_names_of_user
 from .resources.auth.albumAPI import add_to_user_album, fetch_album, delete_album_by_name
 from .resources.auth.adminStatsAPI import  stats_count, stats_album_count, stats_songs_count,stats_total
 from flask_jwt_extended import JWTManager
@@ -56,6 +56,7 @@ app.add_url_rule('/api/auth/deletesong',view_func= delete_song_route,methods=['D
 app.add_url_rule('/api/auth/addplaylist',view_func=add_to_user_playlist,methods=["POST"])
 app.add_url_rule('/api/auth/getplaylist',view_func=fetch_playlist,methods=["GET"])
 app.add_url_rule('/api/auth/dplaylist',view_func=delete_from_user_playlist,methods=["DELETE"])
+app.add_url_rule('/api/auth/userplaylist',view_func=get_Playlist_names_of_user,methods=["GET"])
 
 #album endpoints
 
