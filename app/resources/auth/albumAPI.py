@@ -1,19 +1,21 @@
 
 from flask import Flask,jsonify,request
-from ...models.model import  add_to_album ,get_album
+from ...models.model import  add_to_album ,get_album, get_songId_from_name,update_album
 
 def add_to_user_album():
     data = request.json
 
     user_id = data.get('user_id')
-    song_id = data.get('song_id')
+    song_name = data.get('song_name')
     album_name = data.get('album_name')  
+     
+    if user_id is None or song_name is None or album_name is None:
+        return jsonify({"error": "user_id, song_name, and album_name are required"}), 400
 
-    if user_id is None or song_id is None or album_name is None:
-        return jsonify({"error": "user_id, song_id, and album_name are required"}), 400
-
+    result = get_songId_from_name(song_name)
+    song_id = result[0][0]
     try:
-        if add_to_album(user_id, song_id, album_name):
+        if add_to_album(user_id,song_id, album_name):
             return jsonify({"success": "Song added to album successfully"}), 201
         else:
             return jsonify({"error": "Failed to add song to album"}), 500
@@ -59,5 +61,7 @@ def fetch_album():
         return jsonify({"albums": formatted_albums}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
 
 

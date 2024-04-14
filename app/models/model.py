@@ -158,18 +158,29 @@ def delete_song(song_id):
     conn.commit()
     conn.close()
 
+def get_songId_from_name(song_name):
+    print(song_name)
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute('SELECT id FROM songs where title=?',(song_name,))
+    song = c.fetchall()
+    conn.close
+    print(song)
+    return song
+
 #playlist part
 
 def get_playlist(user_id):
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
-
+    print(user_id)
     try:
         cursor.execute('''SELECT playlists.name, songs.* FROM playlist
                         INNER JOIN songs ON playlist.song_id = songs.id
                         INNER JOIN playlists ON playlist.playlist_id = playlists.id
                         WHERE playlist.user_id = ?''', (user_id,))
         playlist = cursor.fetchall()
+        print(playlist)
         conn.close()
         return playlist
     except sqlite3.Error as e:
@@ -282,4 +293,53 @@ def add_to_album(user_id, song_id, album_name):
         conn.rollback()
         conn.close()
         raise e
+
+def update_album(album_name_old,album_name_new):
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    try:
+        cursor.execute('''UPDATE album set album_name = ? where album_name = ?''',(album_name_new,album_name_old))
+        conn.commit()
+        conn.close()
+    except sqlite3.Error as e:
+        return false
+
+
+def count_user(role):
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    try:
+        cursor.execute('''SELECT COUNT(*) FROM users where role = ? ''',(role,))
+        count = cursor.fetchone()
+        conn.close()
+    except sqlite3.Error as e:
+        return "not working"
+    return count[0]
+
+def count_album():
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    try:
+        cursor.execute('''SELECT COUNT(*) FROM albums''')
+        count = cursor.fetchone()
+        conn.close()
+    except sqlite3.Error as e:
+        return "not working"
+    return count[0]
+
+def count_songs():
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    try:
+        cursor.execute('''SELECT COUNT(*) FROM songs''')
+        count = cursor.fetchone()
+        conn.close()
+    except sqlite3.Error as e:
+        return "not working"
+    return count[0]
+
+
+
+
+
 
