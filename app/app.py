@@ -3,7 +3,7 @@ from flask_cors import CORS
 from .resources.auth.userAPI import UserAPI , LoginAPI, Register
 from .resources.auth.songsAPI import Get_songs_route,  Add_song_route, update_song_route, delete_song_route
 from .resources.auth.playlistAPI import add_to_user_playlist,fetch_playlist, delete_from_user_playlist
-from .resources.auth.albumAPI import add_to_user_album, fetch_album
+from .resources.auth.albumAPI import add_to_user_album, fetch_album, delete_album_by_name
 from .resources.auth.adminStatsAPI import  stats_count, stats_album_count, stats_songs_count,stats_total
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
@@ -61,6 +61,7 @@ app.add_url_rule('/api/auth/dplaylist',view_func=delete_from_user_playlist,metho
 
 app.add_url_rule('/api/auth/addalbum',view_func=add_to_user_album,methods=["POST"])
 app.add_url_rule('/api/auth/getalbum',view_func=fetch_album,methods=["GET"])
+app.add_url_rule('/api/auth/deletealbumfull',view_func=delete_album_by_name,methods=["DELETE"])
 
 #stats
 

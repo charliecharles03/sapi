@@ -302,8 +302,18 @@ def update_album(album_name_old,album_name_new):
         conn.commit()
         conn.close()
     except sqlite3.Error as e:
-        return false
+      return false
 
+
+def delete_album_whole(album_name):
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    try:
+        cursor.execute(''' DELETE FROM albums where name = ? ''',(album_name,))
+        conn.commit()
+        conn.close()
+    except sqlite3.Error as e:
+        return "not working" 
 
 def count_user(role):
     conn = sqlite3.connect('database.db')

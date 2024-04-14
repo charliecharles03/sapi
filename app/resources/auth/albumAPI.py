@@ -1,6 +1,6 @@
 
 from flask import Flask,jsonify,request
-from ...models.model import  add_to_album ,get_album, get_songId_from_name,update_album
+from ...models.model import  add_to_album ,get_album, get_songId_from_name,update_album, delete_album_whole
 
 def add_to_user_album():
     data = request.json
@@ -64,4 +64,13 @@ def fetch_album():
 
 
 
+def delete_album_by_name():
+    album_name= request.args.get('album_name')
 
+    if album_name is None:
+        return jsonify({"error": "user_id is required"}), 400
+    try:
+        delete_album_whole(album_name)
+        return  jsonify("successfully deleted"),200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
