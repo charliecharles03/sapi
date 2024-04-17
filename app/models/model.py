@@ -258,6 +258,25 @@ def delete_from_playlist(user_id, song_id, playlist_name):
         conn.close()
         raise e
 
+def make_new_playlist(user_id,name):
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    try:
+        # Check if playlist exists for the user, if not, create it
+        cursor.execute('''SELECT id FROM playlists
+                        WHERE user_id = ? AND name = ?''', (user_id,name))
+        playlist = cursor.fetchone()
+
+        if not playlist:
+            cursor.execute('''INSERT INTO playlists (user_id, name)
+                            VALUES (?, ?)''', (user_id,name))
+        conn.commit()
+        conn.close()
+    except sqlite3.Error as e:
+        conn.rollback()
+        conn.close()
+        raise e
+
 #album part
 
 def get_album(user_id):
