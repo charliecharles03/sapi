@@ -130,8 +130,9 @@ def authenticate_user(username, password):
 def add_song(song_data):
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
+    print(song_data)
     c.execute("INSERT INTO songs (title, artist, album, duration, genre, year, cover, audio) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-              (song_data['title'], song_data['artist'], song_data.get('album', ''), song_data.get('duration', ''), song_data.get('genre', ''), song_data.get('year', ''), song_data.get('cover', ''), song_data.get('audio', '')))
+              (song_data['title'], song_data['artist'], song_data.get('album', ''), song_data.get('duration', ''), song_data.get('genre', ''), song_data.get('year', ''), song_data.get('coverFile', ''), song_data.get('audio', '')))
     conn.commit()
     conn.close()
 
@@ -147,7 +148,7 @@ def update_song(song_id, song_data):
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
     c.execute("UPDATE songs SET title=?, artist=?, album=?, duration=?, genre=?, year=?, cover=?, audio=? WHERE id=?",
-              (song_data['title'], song_data['artist'], song_data.get('album', ''), song_data.get('duration', ''), song_data.get('genre', ''), song_data.get('year', ''), song_data.get('cover', ''), song_data.get('audio', ''), song_id))
+              (song_data['title'], song_data['artist'], song_data.get('album', ''), song_data.get('duration', ''), song_data.get('genre', ''), song_data.get('year', ''), song_data.get('coverFile', ''), song_data.get('songFile', ''), song_id))
     conn.commit()
     conn.close()
 
